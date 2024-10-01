@@ -9,16 +9,16 @@ class ConnectionPool {
     private final int poolSize;
     private final AtomicBoolean isInitialized = new AtomicBoolean(false);
 
-    // Lazy-loaded singleton instance of the connection pool
-    private static volatile ConnectionPool instance = null;
 
-    // Private constructor to prevent direct instantiation
+    private static volatile ConnectionPool instance = null;               // Lazy-loaded singleton instance of the connection pool
+
+
     private ConnectionPool(int size) {
         this.poolSize = size;
         this.connectionPool = new LinkedBlockingQueue<>(size);
     }
 
-    // Singleton lazy initialization method
+    // lazy initialization methods
     public static ConnectionPool getInstance(int size) {
         if (instance == null) {
             synchronized (ConnectionPool.class) {
@@ -30,7 +30,6 @@ class ConnectionPool {
         return instance;
     }
 
-    // Lazy initialize connections only when needed
     private void initializeConnections() {
         if (isInitialized.compareAndSet(false, true)) {
             for (int i = 0; i < poolSize; i++) {
@@ -40,12 +39,12 @@ class ConnectionPool {
         }
     }
 
-    // Get a connection from the pool
+
     public Connection getConnection() {
-        initializeConnections(); // Ensure connections are initialized lazily
+        initializeConnections();
         Connection connection = null;
         try {
-            connection = connectionPool.take(); // Get an available connection
+            connection = connectionPool.take();
             System.out.println(Thread.currentThread().getName() + " acquired " + connection);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -54,11 +53,11 @@ class ConnectionPool {
         return connection;
     }
 
-    // Return a connection to the pool
+
     public void releaseConnection(Connection connection) {
         if (connection != null) {
             try {
-                connectionPool.put(connection); // Put the connection back into the pool
+                connectionPool.put(connection);
                 System.out.println(Thread.currentThread().getName() + " released " + connection);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();

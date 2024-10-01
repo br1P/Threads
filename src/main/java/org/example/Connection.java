@@ -9,15 +9,15 @@ class Connection {
     }
 
     public void connect() {
-        System.out.println(Thread.currentThread().getName() + " - Connection " + id + " established.");
+        System.out.println("The " + Thread.currentThread().getName() + " - Connection for  " + id + " is now established.");
     }
 
     public void disconnect() {
-        System.out.println(Thread.currentThread().getName() + " - Connection " + id + " closed.");
+        System.out.println("The " + Thread.currentThread().getName() + " - Connection for " + id + " is now closed.");
     }
 
     @Override
     public String toString() {
-        return "Connection{id=" + id + '}';
+        return "Connection:id:" + id + ' ';
     }
 }
